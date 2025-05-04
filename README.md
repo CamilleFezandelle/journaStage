@@ -11,7 +11,7 @@ Plateforme web intuitive pour la gestion des comptes-rendus de stage des apprent
   - Édition ou suppression des comptes-rendus créés
   - Association à une seule classe
 
-- 👩‍🏫 **Enseignants** :
+- 👩‍🏫 **Professeurs** :
 
   - Accès à la liste des étudiants par classe auxquels ils sont associés
   - Lecture des comptes-rendus par étudiant
