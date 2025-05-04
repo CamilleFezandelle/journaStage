@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# Node.js
+node_modules/
+
+# PHP / Composer
+vendor/
+
+# Environnement
+.env
+
+# Logs
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# Fichiers temporaires
+*.tmp
+*.bak
+*.swp

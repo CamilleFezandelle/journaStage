@@ -1,0 +1,10 @@
+# Autoriser la réécriture d'URL
+RewriteEngine On
+
+# Réécrire les URL pour enlever le préfixe /FEZANDELLECAMILLE/projects/JournaStage/
+RewriteBase /FEZANDELLECAMILLE/projects/JournaStage/
+
+# Si l'URL ne correspond pas à un fichier existant, rediriger vers index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
