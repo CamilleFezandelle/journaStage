@@ -1,20 +1,25 @@
 <?php
-
 class Router
 {
   private array $getRoutes = [];
   private array $postRoutes = [];
 
   // GET
-  public function get(string $path, callable $callback): void
+  public function get(string $path, $callback, ?callable $access = null): void
   {
-    $this->getRoutes[$path] = $callback;
+    $this->getRoutes[$path] = [
+      'callback' => $callback,
+      'access' => $access
+    ];
   }
 
   // POST
-  public function post(string $path, callable $callback): void
+  public function post(string $path, $callback, ?callable $access = null): void
   {
-    $this->postRoutes[$path] = $callback;
+    $this->postRoutes[$path] = [
+      'callback' => $callback,
+      'access' => $access
+    ];
   }
 
   // DISPATCH
@@ -30,10 +35,24 @@ class Router
     $routes = $method === 'POST' ? $this->postRoutes : $this->getRoutes;
 
     if (isset($routes[$uri])) {
-      $routes[$uri]();
+      $route = $routes[$uri];
+
+      if (isset($route['access']) && is_callable($route['access']) && !$route['access']()) {
+        http_response_code(403);
+        echo "403 Forbidden";
+        return;
+      }
+
+      if (is_array($route['callback'])) {
+        $controller = new $route['callback'][0]();
+        call_user_func([$controller, $route['callback'][1]]);
+      } else {
+        call_user_func($route['callback']);
+      }
     } else {
       http_response_code(404);
       echo "404 Not Found";
+      return;
     }
   }
 }
