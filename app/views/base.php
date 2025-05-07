@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="./public/css/styles.css">
   <script src="https://kit.fontawesome.com/b0d8e23d7e.js" crossorigin="anonymous"></script>
   <script src="./public/js/burgerMenu.js" defer></script>
+  <script src="./public/js/temp-window.js" defer></script>
   <?php if (!empty($scripts)): ?>
     <?php foreach ($scripts as $script): ?>
       <script src="./public/js/<?= htmlspecialchars($script) ?>" defer></script>

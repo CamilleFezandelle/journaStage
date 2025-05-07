@@ -24,7 +24,7 @@ if ($user) :
         <span></span>
       </div>
       <span class="status">Espace ÉTUDIANT</span>
-      <a href="#" class="logo">journaStage</a>
+      <a href="./" class="logo">journaStage</a>
       <nav>
         <a href="#" class="link">Mon compte</a>
         <a href="./deconnexion" class="link logout">Déconnexion</a>

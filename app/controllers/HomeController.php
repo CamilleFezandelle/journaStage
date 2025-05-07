@@ -26,7 +26,7 @@ class HomeController
       exit;
     }
 
-    if (!$user->getPasswordStatus()) {
+    if ($user->getPasswordStatus()) {
       $this->changeTemporaryPassword($user);
       exit;
     }
@@ -57,16 +57,23 @@ class HomeController
 
   private function studentHome(User $user): void
   {
+    $success = false;
+
+    if (isset($_GET['success']) && $_GET['success'] === '1') {
+      $success = true;
+    }
+
     renderView('student/home', [
-      'title' => 'Accueil étudiant',
-      'user' => $user
+      'title' => 'JournaStage - Accueil',
+      'user' => $user,
+      'success' => $success
     ]);
   }
 
   private function professorHome(User $user): void
   {
     renderView('professor/home', [
-      'title' => 'Accueil professeur',
+      'title' => 'JournaStage - Accueil',
       'user' => $user
     ]);
   }

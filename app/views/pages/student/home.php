@@ -2,6 +2,12 @@
 $firstName = htmlspecialchars($user->getFirstName());
 ?>
 
+<?php if ($success) : ?>
+  <div class="temp-window success">
+    <p><i class="fa-solid fa-check"></i>Nouveau compte rendu créé avec succès.</p>
+  </div>
+<?php endif ?>
+
 <div class="main-container">
   <main class="grid-home">
     <div class="image">
@@ -12,7 +18,7 @@ $firstName = htmlspecialchars($user->getFirstName());
         <h1 class="text-overflow">Bienvenue,<br /><span><?= $firstName ?></span></h1>
         <p>Ton stage, ton suivi, au même endroit.</p>
       </div>
-      <a href="./e-newcr.html" class="button-primary"><i class="fa-solid fa-plus"></i>Créer un nouveau compte rendu</a>
+      <a href="./nouveau-compte-rendu" class="button-primary"><i class="fa-solid fa-plus"></i>Créer un nouveau compte rendu</a>
       <a href="./index.html" class="button-secondary"><i class="fa-solid fa-eye"></i>Voir mes comptes rendus</a>
     </div>
   </main>
