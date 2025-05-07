@@ -23,4 +23,9 @@ class Database
     }
     return self::$instance;
   }
+
+  public static function prepare(string $query): PDOStatement
+  {
+    return self::getInstance()->prepare($query);
+  }
 }
