@@ -45,6 +45,21 @@ class User
     return $this->idUser;
   }
 
+  public function getPublicId(): string
+  {
+    return $this->publicId;
+  }
+
+  public function getLastName(): string
+  {
+    return $this->lastName;
+  }
+
+  public function getFirstName(): string
+  {
+    return $this->firstName;
+  }
+
   public function getPasswordStatus(): bool
   {
     return $this->temporaryPassword;

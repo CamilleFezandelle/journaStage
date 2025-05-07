@@ -26,7 +26,7 @@ class HomeController
       exit;
     }
 
-    if ($user->getPasswordStatus()) {
+    if (!$user->getPasswordStatus()) {
       $this->changeTemporaryPassword($user);
       exit;
     }

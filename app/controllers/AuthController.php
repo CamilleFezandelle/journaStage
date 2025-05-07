@@ -10,7 +10,10 @@ class AuthController
   private UserRepository $userRepository;
   private SessionRepository $sessionRepository;
 
-  const ERROR_REQUIRED = 'Ce champ est requis';
+  const ERROR_INPUT_REQUIRED = 'Ce champ est requis.';
+  const ERROR_INPUT_INVALID = 'Le format de ce champ est invalide.';
+  const ERROR_INCORRECT = 'Email ou mot de passe incorrect.';
+
 
   public function __construct()
   {
@@ -36,20 +39,23 @@ class AuthController
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-      $_POST = filter_input_array(INPUT_POST, [
-        'email' => FILTER_SANITIZE_EMAIL,
-        'password' => FILTER_SANITIZE_FULL_SPECIAL_CHARS
-      ]);
+      $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
+      $password = trim($_POST['password'] ?? '');
 
-      $email = $_POST['email'] ?? '';
-      $password = $_POST['password'] ?? '';
+      if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $error['email'] = self::ERROR_INPUT_INVALID;
+      }
+
+      if (strlen($password) < 3 || strlen($password) > 255) {
+        $error['password'] = self::ERROR_INPUT_INVALID;
+      }
 
       if (empty($email)) {
-        $error['email'] = self::ERROR_REQUIRED;
+        $error['email'] = self::ERROR_INPUT_REQUIRED;
       }
 
       if (empty($password)) {
-        $error['password'] = self::ERROR_REQUIRED;
+        $error['password'] = self::ERROR_INPUT_REQUIRED;
       }
 
       if (empty(array_filter($error))) {
@@ -59,7 +65,7 @@ class AuthController
           header('Location: ./');
           exit;
         } else {
-          $error['global'] = 'Identifiants incorrects';
+          $error['global'] = self::ERROR_INCORRECT;
         }
       }
     }
@@ -67,6 +73,9 @@ class AuthController
     renderView('login', [
       'title' => 'Connexion',
       'error' => $error,
+      'scripts' => [
+        'login.js'
+      ]
     ]);
   }
 

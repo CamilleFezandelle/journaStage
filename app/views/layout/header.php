@@ -9,15 +9,26 @@ $user = $authService->getAuthenticatedUser();
 
 if ($user) :
 ?>
-  <header>
-    <h2>HEADER</h2>
-    <a href="#">Mes informations</a>
-    <br>
-    <br>
-    <a href="./deconnexion">Déconnexion</a>
-    <br>
-    <br>
-    <hr>
-    <br>
-  </header>
+  <div class="menu">
+    <span class="status">Espace ÉTUDIANT</span>
+    <nav>
+      <a href="#" class="link">Mon compte</a>
+      <a href="./deconnexion" class="link logout">Déconnexion</a>
+    </nav>
+  </div>
+  <div class="header-container">
+    <header>
+      <div class="burger-menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <span class="status">Espace ÉTUDIANT</span>
+      <a href="#" class="logo">journaStage</a>
+      <nav>
+        <a href="#" class="link">Mon compte</a>
+        <a href="./deconnexion" class="link logout">Déconnexion</a>
+      </nav>
+    </header>
+  </div>
 <?php endif; ?>
