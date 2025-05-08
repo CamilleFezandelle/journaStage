@@ -17,6 +17,7 @@
   --warning-background: #fdf0f1;
   --valid: #16a085;
   --valid-background: #e8f6f2;
+  --edit: #3498db;
   --button-primary: #134629;
   --button-secondary: #ffffff;
   --button-warning: #e74c3c;
@@ -851,6 +852,28 @@ textarea.large {
   }
 }
 
+.text-with-dots {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+
+  p {
+    width: fit-content;
+  }
+
+  span {
+    flex: 1;
+    border-bottom: var(--border-secondary) dotted 2px;
+  }
+}
+
+.year-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
 .year-separator {
   display: flex;
   align-items: center;
@@ -956,13 +979,13 @@ textarea.large {
     aspect-ratio: 1 / 1;
     width: fit-content;
     padding: 1.5rem;
-    background-color: var(--warning);
+    background-color: var(--warning-background);
     border-radius: 100%;
     box-shadow: var(--box-shadow);
 
     i {
       font-size: 3rem;
-      color: var(--container-secondary);
+      color: var(--warning);
     }
   }
 
@@ -984,9 +1007,9 @@ textarea.large {
 }
 
 .temp-window {
-  position: absolute;
+  position: fixed;
   display: flex;
-  top: 100px;
+  top: 125px;
   left: 50%;
   transform: translateX(-50%);
   justify-content: center;
@@ -1003,6 +1026,14 @@ textarea.large {
 
   &.success {
     background-color: var(--valid);
+  }
+
+  &.warning {
+    background-color: var(--warning);
+  }
+
+  &.edit {
+    background-color: var(--edit);
   }
 
   &.error {
@@ -1579,7 +1610,6 @@ textarea.large {
   .element {
     .content {
       flex-direction: column;
-      align-items: flex-start;
     }
 
     .content {
@@ -1591,8 +1621,12 @@ textarea.large {
       font-size: 0.75rem;
     }
 
+    .content .text-with-dots p {
+      width: fit-content;
+    }
+
     legend {
-      margin-left: 2rem;
+      margin: auto;
       font-size: 0.8rem;
     }
   }
@@ -1624,5 +1658,12 @@ textarea.large {
     p {
       font-size: 0.8rem;
     }
+  }
+
+  .temp-window {
+    min-width: none;
+    max-width: none;
+    width: 100%;
+    border-radius: 0;
   }
 }

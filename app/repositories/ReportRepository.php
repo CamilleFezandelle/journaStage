@@ -48,6 +48,101 @@ class ReportRepository
     return true;
   }
 
+  public function getAllReportsByStudentId(int $studentId): array
+  {
+    $query = "SELECT * FROM JOURNASTAGE_REPORT WHERE student_id = :student_id ORDER BY date DESC";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':student_id', $studentId);
+
+      $stmt->execute();
+      $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+      $reports = [];
+
+      foreach ($rows as $row) {
+        $report = new Report(
+          $row['id_report'],
+          $row['public_id'],
+          $row['title'],
+          $row['content'],
+          $row['date'],
+          $row['student_id']
+        );
+        $reports[] = $report;
+      }
+      return $reports;
+    } catch (PDOException) {
+      return [];
+    }
+  }
+
+  public function getReportByPublicId(string $publicId): ?Report
+  {
+    $query = "SELECT * FROM JOURNASTAGE_REPORT WHERE public_id = :public_id";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':public_id', $publicId);
+
+      $stmt->execute();
+      $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($row) {
+        return new Report(
+          $row['id_report'],
+          $row['public_id'],
+          $row['title'],
+          $row['content'],
+          $row['date'],
+          $row['student_id']
+        );
+      }
+    } catch (PDOException) {
+      return null;
+    }
+    return null;
+  }
+
+  public function updateReport(int $reportId, string $title, string $date, string $content): bool
+  {
+    $reportDate = date('Y-m-d H:i:s', strtotime($date));
+
+    $query = "UPDATE JOURNASTAGE_REPORT SET title = :title, date = :date, content = :content WHERE id_report = :id_report";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':id_report', $reportId);
+      $stmt->bindParam(':title', $title);
+      $stmt->bindParam(':date', $reportDate);
+      $stmt->bindParam(':content', $content);
+
+      $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+    return true;
+  }
+
+  public function deleteReport(int $reportId): bool
+  {
+    $query = "DELETE FROM JOURNASTAGE_REPORT WHERE id_report = :id_report";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':id_report', $reportId);
+
+      $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+    return true;
+  }
+
   private function generateUniquePublicId(): string
   {
     do {

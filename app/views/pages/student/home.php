@@ -2,9 +2,9 @@
 $firstName = htmlspecialchars($user->getFirstName());
 ?>
 
-<?php if ($success) : ?>
+<?php if ($successCreate) : ?>
   <div class="temp-window success">
-    <p><i class="fa-solid fa-check"></i>Nouveau compte rendu créé avec succès.</p>
+    <p><i class="fa-solid fa-circle-check"></i>Le compte rendu a été créé avec succès.</p>
   </div>
 <?php endif ?>
 
@@ -19,7 +19,7 @@ $firstName = htmlspecialchars($user->getFirstName());
         <p>Ton stage, ton suivi, au même endroit.</p>
       </div>
       <a href="./nouveau-compte-rendu" class="button-primary"><i class="fa-solid fa-plus"></i>Créer un nouveau compte rendu</a>
-      <a href="./index.html" class="button-secondary"><i class="fa-solid fa-eye"></i>Voir mes comptes rendus</a>
+      <a href="./mes-comptes-rendus" class="button-secondary"><i class="fa-solid fa-eye"></i>Voir mes comptes rendus</a>
     </div>
   </main>
 </div>

@@ -17,21 +17,18 @@ class SessionRepository
     $sessionToken = bin2hex(random_bytes(32));
     $createdAt = date('Y-m-d H:i:s');
     $expiresAt = date('Y-m-d H:i:s', $sessionExpiresAt);
-    $isActive = true;
 
     $query = "INSERT INTO JOURNASTAGE_SESSION 
     (
       user_id,
       session_token,
       created_at,
-      expires_at,
-      is_active
+      expires_at
     ) VALUES (
       :user_id,
       :session_token,
       :created_at,
-      :expires_at,
-      :is_active
+      :expires_at
     )";
 
     $stmt = $this->db->prepare($query);
@@ -40,7 +37,6 @@ class SessionRepository
     $stmt->bindParam(':session_token', $sessionToken);
     $stmt->bindParam(':created_at', $createdAt);
     $stmt->bindParam(':expires_at', $expiresAt);
-    $stmt->bindParam(':is_active', $isActive);
 
     $stmt->execute();
 
@@ -64,8 +60,7 @@ class SessionRepository
         (int) $data['user_id'],
         $data['session_token'],
         $data['created_at'],
-        $data['expires_at'],
-        (bool) $data['is_active']
+        $data['expires_at']
       );
     }
 
