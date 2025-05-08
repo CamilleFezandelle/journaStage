@@ -33,6 +33,7 @@ $router->post('/contact', [AuthController::class, 'contact']);;
 
 // same for all status
 $router->get('', [HomeController::class, 'home']);
+$router->post('', [HomeController::class, 'home']);
 
 $router->get('/informations-personnelles', [ProfileController::class, 'personalInfo']);
 

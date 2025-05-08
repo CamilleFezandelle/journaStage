@@ -53,9 +53,39 @@ class HomeController
 
   private function changeTemporaryPassword(User $user): void
   {
+    $error = '';
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+      $password = $_POST['password'] ?? '';
+      $confirmPassword = $_POST['confirm-password'] ?? '';
+
+      if ($password !== $confirmPassword) {
+        $error = "Les mots de passe ne correspondent pas.";
+        return;
+      }
+
+      $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+      $changePwd = $this->userRepository->changeUserPassword($user->getIdUser(), $hashedPassword);
+      $changePwdStatus = $this->userRepository->changeTemporaryPassword($user->getIdUser());
+
+      if ($changePwd && $changePwdStatus) {
+        header('Location: ./');
+        exit;
+      } else {
+        http_response_code(500);
+        renderView('error/500', [
+          'title' => 'JournaStage - Erreur'
+        ]);
+        exit;
+      }
+    }
     renderView('changeTempPwd', [
       'title' => 'Changement de mot de passe',
-      'user' => $user
+      'user' => $user,
+      'error' => $error,
+      'scripts' => ['changeTempPwd.js']
     ]);
   }
 

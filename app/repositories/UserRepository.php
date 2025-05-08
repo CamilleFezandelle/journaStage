@@ -65,4 +65,38 @@ class UserRepository
 
     return null;
   }
+
+  public function changeUserPassword(int $idUser, string $newPassword): bool
+  {
+    $query = "UPDATE JOURNASTAGE_USER SET password = :password WHERE id_user = :id_user";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':password', $newPassword);
+      $stmt->bindParam(':id_user', $idUser);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
+
+  public function changeTemporaryPassword(int $idUser): bool
+  {
+    $temporaryStatus = 0;
+
+    $query = "UPDATE JOURNASTAGE_USER SET temporary_password = :temporary_password WHERE id_user = :id_user";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':temporary_password', $temporaryStatus);
+      $stmt->bindParam(':id_user', $idUser);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
 }
