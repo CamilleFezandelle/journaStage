@@ -65,6 +65,9 @@
       </div>
     </div>
     <div class="block-container text-overflow">
+      <?php if (empty($reports)): ?>
+        <h2 class="center">Aucun compte rendu trouvé.</h2>
+      <?php endif; ?>
       <?php foreach ($reports as $year => $reportsList): ?>
         <div class="year-container">
           <div class="year-separator">

@@ -60,6 +60,16 @@ class User
     return $this->firstName;
   }
 
+  public function getEmail(): string
+  {
+    return $this->email;
+  }
+
+  public function getBirthDate(): string
+  {
+    return $this->birthDate;
+  }
+
   public function getPasswordStatus(): bool
   {
     return $this->temporaryPassword;
@@ -73,5 +83,10 @@ class User
   public function getStatus(): int
   {
     return $this->status;
+  }
+
+  public function isAdmin(): bool
+  {
+    return $this->admin;
   }
 }

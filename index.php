@@ -7,9 +7,12 @@ require_once __DIR__ . '/app/controllers/ProfessorController.php';
 require_once __DIR__ . '/app/controllers/ProfileController.php';
 require_once __DIR__ . '/app/controllers/StudentController.php';
 
-$temporaryPassword = false;
-$userStatus = 0;
-$admin = true;
+$userRepository = new UserRepository(Database::getInstance());
+$sessionRepository = new SessionRepository(Database::getInstance());
+$authService = new AuthService($userRepository, $sessionRepository);
+
+$user = $authService->getAuthenticatedUser();
+$userStatus = $user ? $user->getStatus() : null;
 
 $router = new Router();
 
