@@ -6,7 +6,12 @@ $sessionRepository = new SessionRepository(Database::getInstance());
 $authService = new AuthService($userRepository, $sessionRepository);
 $user = $authService->getAuthenticatedUser();
 
-$status = $user->getStatus();
+$status = null;
+
+if (isset($user)) {
+  $status = $user->getStatus();
+}
+
 $statusName = '';
 
 if ($status === 0) {
@@ -22,7 +27,7 @@ if ($user) :
     <span class="status">Espace <?= $statusName ?></span>
     <nav>
       <a href="<?= BASE_URL ?>/informations-personnelles" class="link <?= $linkactive ? 'active' : '' ?>">Mon compte</a>
-      <a href="<?= BASE_URL ?>/deconnexion" class="link logout">Déconnexion</a>
+      <a href="./deconnexion" class="link logout">Déconnexion</a>
     </nav>
   </div>
   <div class="header-container">

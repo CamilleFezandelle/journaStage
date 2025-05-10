@@ -51,12 +51,6 @@ class StudentController
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-      $_POST = filter_input_array(INPUT_POST, [
-        'title' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-        'date' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-        'content' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-      ]);
-
       $title = $_POST['title'] ?? '';
       $date = $_POST['date'] ?? '';
       $content = $_POST['content'] ?? '';
@@ -189,11 +183,6 @@ class StudentController
       if (isset($_GET['action']) && $_GET['action'] === 'edit') {
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-          $_POST = filter_input_array(INPUT_POST, [
-            'title' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-            'date' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-            'content' => FILTER_SANITIZE_FULL_SPECIAL_CHARS,
-          ]);
 
           $title = $_POST['title'] ?? '';
           $date = $_POST['date'] ?? '';

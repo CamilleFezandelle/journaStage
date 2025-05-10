@@ -1,12 +1,32 @@
-<?php if ($successDelete) : ?>
-  <div class="temp-window warning">
-    <p><i class="far fa-trash-alt"></i>Le compte rendu a bien été supprimé.</p>
-  </div>
-<?php endif ?>
+<?php
+
+$studentPublicId = htmlspecialchars($student['student_public_id']);
+$studentLastName = htmlspecialchars($student['student_last_name']);
+$studentFirstName = htmlspecialchars($student['student_first_name']);
+$studentBirthDate = new DateTime(htmlspecialchars($student['student_birth_date']));
+$today = new DateTime();
+$studentAge = $today->diff($studentBirthDate)->y;
+$reportCount = htmlspecialchars($student['report_count']);
+
+if ($studentAge < 0) {
+  $studentAge = 0;
+}
+
+if ($reportCount < 2) {
+  $reportCount .= " compte rendu";
+} else {
+  $reportCount .= " comptes rendus";
+}
+
+?>
 
 <div class="title-container">
   <section>
-    <h1>Mes comptes rendus</h1>
+    <div class="title">
+      <h1><span class="uppercase"><?= $studentLastName ?></span> <?= $studentFirstName ?></h1>
+      <p><?= $studentAge ?> ans</p>
+    </div>
+    <P class="description"><?= $reportCount ?></P>
   </section>
 </div>
 <div class="main-container">
@@ -18,43 +38,47 @@
           <i class="chevron fa-solid fa-chevron-down"></i>
         </button>
         <div class="content accordion-content">
-          <form action="./mes-comptes-rendus" method="GET" class="hidden">
+          <form action="#" method="POST" class="hidden">
             <fieldset class="sort">
               <legend>Trier par :</legend>
               <div class="checkbox-container">
-                <input type="radio" id="sortby1" name="sortby" checked />
-                <label for="sortby1">Date (Plus récent)</label>
+                <input type="radio" id="radio3" name="radio" checked />
+                <label for="radio3">Date (Plus récent)</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="sortby2" name="sortby" />
-                <label for="sortby2">Date (Plus ancien)</label>
+                <input type="radio" id="radio4" name="radio" />
+                <label for="radio4">Date (Plus ancien)</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="sortby3" name="sortby" />
-                <label for="sortby3">Titre (A - Z)</label>
+                <input type="radio" id="radio1" name="radio" />
+                <label for="radio1">Titre (A - Z)</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="sortby4" name="sortby" />
-                <label for="sortby4">Titre (Z - A)</label>
+                <input type="radio" id="radio2" name="radio" />
+                <label for="radio2">Titre (Z - A)</label>
               </div>
             </fieldset>
             <fieldset class="years">
               <legend>Années :</legend>
               <div class="checkbox-container">
-                <input type="radio" id="year1" name="year" checked />
-                <label for="year1">Toutes</label>
+                <input type="radio" id="check1" name="check" checked />
+                <label for="check1">Toutes</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="year2" name="year" />
-                <label for="year2">2025</label>
+                <input type="radio" id="check2" name="check" />
+                <label for="check2">2025</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="year3" name="year" />
-                <label for="year3">2024</label>
+                <input type="radio" id="check3" name="check" />
+                <label for="check3">2024</label>
               </div>
               <div class="checkbox-container">
-                <input type="radio" id="year4" name="year" />
-                <label for="year4">2023</label>
+                <input type="radio" id="check4" name="check" />
+                <label for="check4">2023</label>
+              </div>
+              <div class="checkbox-container">
+                <input type="radio" id="check5" name="check" />
+                <label for="check5">2022</label>
               </div>
             </fieldset>
             <button type="submit" class="submit-btn button-secondary">
@@ -83,7 +107,7 @@
                   <p class="text-overflow"><?= htmlspecialchars($report->getTitle()) ?></p>
                   <span></span>
                 </div>
-                <a href="./mes-comptes-rendus?id=<?= $report->getPublicId() ?>" class="button-primary"><i class="fa-solid fa-eye"></i>Consulter</a>
+                <a href="./etudiant?id=<?= $student['student_public_id'] ?>&compte_rendu_id=<?= $report->getPublicId() ?>" class="button-primary"><i class="fa-solid fa-eye"></i>Consulter</a>
               </div>
             </fieldset>
           <?php endforeach; ?>

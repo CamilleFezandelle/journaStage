@@ -1,5 +1,7 @@
 <div class="title-container">
-  <h1>Mes classes</h1>
+  <section>
+    <h1>Mes classes</h1>
+  </section>
 </div>
 <div class="main-container">
   <main class="main-flex-column">

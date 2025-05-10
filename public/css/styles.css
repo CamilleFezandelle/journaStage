@@ -211,6 +211,10 @@ a {
   font-size: 0.85rem;
 }
 
+span.invisible {
+  visibility: hidden;
+}
+
 body {
   position: relative;
   display: flex;
@@ -246,10 +250,23 @@ body.no-scroll {
 .title-container {
   background-color: var(--background-header-secondary);
   border-bottom: 1px solid var(--border);
+  height: 150px;
+
+  section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    padding: 0 2rem;
+  }
 
   h1 {
     font-size: 2.5rem;
-    padding: 3rem 2rem;
+  }
+
+  p.description {
+    font-size: 0.9rem;
+    color: var(--input-placeholder);
   }
 }
 
@@ -288,7 +305,7 @@ body.no-scroll {
 }
 
 header,
-.title-container h1,
+.title-container section,
 main,
 footer {
   width: 100%;
@@ -1585,7 +1602,6 @@ textarea.large {
   }
 
   .title-container h1 {
-    padding: 2rem 1.5rem;
     font-size: 1.6rem;
   }
 

@@ -29,7 +29,9 @@ $reportContent = htmlspecialchars($report->getContent());
   </div>
 </div>
 <div class="title-container">
-  <h1>Mes comptes rendus</h1>
+  <section>
+    <h1>Mes comptes rendus</h1>
+  </section>
 </div>
 <div class="main-container">
   <main class="main-center">
@@ -64,7 +66,7 @@ $reportContent = htmlspecialchars($report->getContent());
         </div>
         <div class="input-container">
           <label for="content">Contenu</label>
-          <textarea id="content" name="content" rows="4" class="large" disabled><?= $reportContent ?></textarea>
+          <textarea id="content" name="content" rows="4" class="large" disabled><?= html_entity_decode($reportContent) ?></textarea>
         </div>
       </form>
     </div>

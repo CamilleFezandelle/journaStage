@@ -21,7 +21,7 @@ class ClassModel
     public string $classPublicId,
     public string $className,
     public int $classYearNumber,
-    public int $classStudentCount = 0,
+    public int $classStudentCount,
     public SchoolModel $school,
     public ?string $classFullName = null,
     public ?string $classFullYear = null
@@ -37,7 +37,7 @@ class ClassModel
       $this->classFullYear = $this->classYearNumber . '<sup>e</sup> année';
     } else {
       $this->classFullName = $this->className;
-      $this->classFullYear = '';
+      $this->classFullYear = '<span class="invisible">a</span>';
     }
   }
 }
