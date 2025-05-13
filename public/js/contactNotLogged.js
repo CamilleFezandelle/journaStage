@@ -93,11 +93,20 @@ const updateSubmitButtonState = () => {
 };
 
 // Écouteurs d'événements
-lastNameInput.addEventListener("input", checkLastName);
-lastNameInput.addEventListener("blur", showErrorIfInvalid);
-firstNameInput.addEventListener("input", checkFirstName);
-firstNameInput.addEventListener("blur", showErrorIfInvalid);
-emailInput.addEventListener("input", checkEmail);
-emailInput.addEventListener("blur", showErrorIfInvalid);
+if (!lastNameInput.disabled) {
+  lastNameInput.addEventListener("input", checkLastName);
+  lastNameInput.addEventListener("blur", showErrorIfInvalid);
+}
+
+if (!firstNameInput.disabled) {
+  firstNameInput.addEventListener("input", checkFirstName);
+  firstNameInput.addEventListener("blur", showErrorIfInvalid);
+}
+
+if (!emailInput.disabled) {
+  emailInput.addEventListener("input", checkEmail);
+  emailInput.addEventListener("blur", showErrorIfInvalid);
+}
+
 messageInput.addEventListener("input", checkMessage);
 messageInput.addEventListener("blur", showErrorIfInvalid);

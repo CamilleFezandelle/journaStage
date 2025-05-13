@@ -8,6 +8,15 @@ $firstName = htmlspecialchars($user->getFirstName());
   </div>
 <?php endif ?>
 
+<?php if (!$class) : ?>
+  <div class="title-container warning">
+    <section>
+      <p><i class="fa-solid fa-triangle-exclamation"></i> Vous n'êtes actuellement inscrit dans aucune classe. <i class="fa-solid fa-triangle-exclamation"></i></p>
+      <p>Pour en rejoindre une, <a href="./informations-personnelles/modifier-classe">cliquez ici</a>.</p>
+    </section>
+  </div>
+<?php endif; ?>
+
 <div class="main-container">
   <main class="grid-home">
     <div class="image">

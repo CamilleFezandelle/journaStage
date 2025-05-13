@@ -1,5 +1,7 @@
 <div class="title-container">
-  <h1>Créer un nouveau compte rendu</h1>
+  <section>
+    <h1>Créer un nouveau compte rendu</h1>
+  </section>
 </div>
 <div class="main-container">
   <main class="main-center">

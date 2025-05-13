@@ -23,7 +23,7 @@
             <?= $error['password'] ? $error['password'] : '' ?>
           </p>
           <div class="link">
-            <a href="#">Mot de passe oublié ?</a>
+            <a href="./mot-de-passe-oublie">Mot de passe oublié ?</a>
           </div>
         </div>
         <div class="btn-container">

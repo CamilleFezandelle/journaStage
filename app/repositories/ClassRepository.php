@@ -12,6 +12,43 @@ class ClassRepository
     $this->db = $db;
   }
 
+  public function getAllClasses(): array
+  {
+    $query = 'SELECT
+              JOURNASTAGE_CLASS.id_class AS class_id,
+              JOURNASTAGE_CLASS.public_id AS class_public_id,
+              JOURNASTAGE_CLASS.name AS class_name,
+              JOURNASTAGE_CLASS.year_number AS class_year_number,
+              JOURNASTAGE_SCHOOL.id_school AS school_id,
+              JOURNASTAGE_SCHOOL.public_id AS school_public_id,
+              JOURNASTAGE_SCHOOL.name AS school_name,
+              JOURNASTAGE_SCHOOL.city AS school_city,
+              JOURNASTAGE_SCHOOL.department_number AS school_department_number
+              FROM JOURNASTAGE_CLASS, JOURNASTAGE_SCHOOL
+              WHERE JOURNASTAGE_CLASS.school_id = JOURNASTAGE_SCHOOL.id_school';
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->execute();
+      $rows = $stmt->fetchAll();
+
+      usort($rows, function ($a, $b) {
+        $schoolCompare = strcmp($a['school_name'], $b['school_name']);
+
+        if ($schoolCompare !== 0) {
+          return $schoolCompare;
+        }
+
+        return strcmp($a['class_name'], $b['class_name']);
+      });
+
+      return $rows;
+    } catch (PDOException) {
+      return [];
+    }
+  }
+
   public function getClassByStudentId(int $studentId): array
   {
     $query = 'SELECT
@@ -326,6 +363,74 @@ class ClassRepository
       }
     } catch (PDOException) {
       return null;
+    }
+  }
+
+  public function removeClassToStudent(int $studentId): bool
+  {
+    $query = 'UPDATE JOURNASTAGE_USER SET student_class_id = NULL WHERE id_user = :studentId';
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':studentId', $studentId);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
+
+  public function removeClassesToTeacher(int $teacherId): bool
+  {
+    $query = 'DELETE FROM JOURNASTAGE_TEACH WHERE teacher_id = :teacherId';
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':teacherId', $teacherId);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
+
+  public function addClassToStudent(int $studentId, int $classId): bool
+  {
+    $query = 'UPDATE JOURNASTAGE_USER SET student_class_id = :classId WHERE id_user = :studentId';
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':studentId', $studentId);
+      $stmt->bindParam(':classId', $classId);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
+
+  public function addClassesToTeacher(int $teacherId, array $classIds): bool
+  {
+    $query = 'INSERT INTO JOURNASTAGE_TEACH (teacher_id, class_id) VALUES (:teacherId, :classId)';
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      foreach ($classIds as $classId) {
+        $stmt->bindParam(':teacherId', $teacherId);
+        $stmt->bindParam(':classId', $classId);
+
+        if (!$stmt->execute()) {
+          return false;
+        }
+      }
+
+      return true;
+    } catch (PDOException) {
+      return false;
     }
   }
 }

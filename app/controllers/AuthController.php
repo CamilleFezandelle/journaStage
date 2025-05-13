@@ -87,7 +87,12 @@ class AuthController
 
   public function forgotPassword(): void
   {
-    echo "Page mot de passe oublié";
+    renderView('lostPassword', [
+      'title' => 'Mot de passe oublié',
+      'scripts' => [
+        'forgotPassword.js'
+      ]
+    ]);
   }
 
   public function requestAccount(): void
@@ -97,6 +102,51 @@ class AuthController
 
   public function contact(): void
   {
-    echo "Page de contact";
+    $authService = new AuthService($this->userRepository, $this->sessionRepository);
+    $user = $authService->getAuthenticatedUser() ?? null;
+    $scripts = [];
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+      if ($user) {
+        $lastName = $user->getLastName();
+        $firstName = $user->getFirstName();
+        $email = $user->getEmail();
+      } else {
+        $lastName = trim($_POST['lastName'] ?? '');
+        $firstName = trim($_POST['firstName'] ?? '');
+        $email = trim($_POST['email'] ?? '');
+      }
+      $message = trim($_POST['message'] ?? '');
+
+      $to = 'fezandellecamille@gmail.com';
+      $subject = 'JournaStage - Un message de ' . $firstName . ' ' . $lastName;
+      $headers = 'From: ' . $email . "\r\n" .
+        'Reply-To: ' . $email . "\r\n" .
+        'X-Mailer: PHP/' . phpversion();
+      $body = "Nom: $lastName\n" .
+        "Prénom: $firstName\n" .
+        "Email: $email\n" .
+        "Message:\n$message";
+
+      $success = mail($to, $subject, $body, $headers);
+
+      if ($success) {
+        $message = 'Votre message a été envoyé avec succès.';
+      } else {
+        $message = 'Une erreur est survenue lors de l\'envoi de votre message.';
+      }
+    }
+
+    if ($user) {
+      $scripts = ['contactLogged.js'];
+    } else {
+      $scripts = ['contactNotLogged.js'];
+    }
+
+    renderView('contact', [
+      'title' => 'JournaStage - Contact',
+      'user' => $user,
+      'scripts' => $scripts,
+    ]);
   }
 }

@@ -5,12 +5,12 @@
       <form action="#" method="POST">
         <div class="input-container">
           <label for="old-password">Mot de passe actuel</label>
-          <input type="password" id="old-password" name="old-password" placeholder="Mot de passe actuel" />
+          <input type="password" id="old-password" name="current_password" placeholder="Mot de passe actuel" />
           <p class="error-text"></p>
         </div>
         <div class="input-container">
           <label for="password">Nouveau mot de passe</label>
-          <input type="password" id="password" name="password" placeholder="Nouveau mot de passe" />
+          <input type="password" id="password" name="new_password" placeholder="Nouveau mot de passe" />
           <p class="error-text"></p>
           <div class="hidden password-requirements">
             <div class="password-strength">
@@ -31,7 +31,7 @@
           <input
             type="password"
             id="confirm-password"
-            name="confirm-password"
+            name="confirm_password"
             placeholder="Confirmer le mot de passe" />
           <p class="error-text"></p>
         </div>

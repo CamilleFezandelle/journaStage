@@ -2,6 +2,7 @@
 
 include_once __DIR__ . '/../repositories/UserRepository.php';
 include_once __DIR__ . '/../repositories/SessionRepository.php';
+include_once __DIR__ . '/../repositories/ClassRepository.php';
 include_once __DIR__ . '/../core/AuthService.php';
 include_once __DIR__ . '/../core/FlashCookie.php';
 include_once __DIR__ . '/../views/renderView.php';
@@ -10,6 +11,7 @@ class HomeController
 {
   private UserRepository $userRepository;
   private SessionRepository $sessionRepository;
+  private ClassRepository $classRepository;
   private AuthService $authService;
   private FlashCookie $flashCookie;
 
@@ -95,6 +97,9 @@ class HomeController
     header("Cache-Control: post-check=0, pre-check=0", false);
     header("Pragma: no-cache");
 
+    $classRepository = new ClassRepository(Database::getInstance());
+    $class = $classRepository->getClassByStudentId($user->getIdUser()) ? true : false;
+
     $scripts = [];
     $successCreate = false;
 
@@ -108,6 +113,7 @@ class HomeController
     renderView('student/home', [
       'title' => 'JournaStage - Accueil',
       'user' => $user,
+      'class' => $class,
       'successCreate' => $successCreate,
       'scripts' => $scripts
     ]);

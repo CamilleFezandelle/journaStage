@@ -13,7 +13,6 @@ if ($studentAge < 0) {
 
 $reportTitle = htmlspecialchars($report->getTitle());
 $reportContent = htmlspecialchars($report->getContent());
-$reportContent = nl2br($reportContent);
 $reportDate = htmlspecialchars($report->getDate());
 $reportDateReformat = new DateTime($reportDate);
 $reportDateReformat = $reportDateReformat->format('d-m-Y');
