@@ -1,5 +1,5 @@
 <?php
-$firstName = htmlspecialchars($user->getFirstName());
+$firstName = $user->getFirstName();
 ?>
 
 <?php if ($successCreate) : ?>
@@ -24,7 +24,7 @@ $firstName = htmlspecialchars($user->getFirstName());
     </div>
     <div class="content">
       <div class="text">
-        <h1 class="text-overflow">Bienvenue,<br /><span><?= $firstName ?></span></h1>
+        <h1 class="text-overflow">Bienvenue,<br /><span><?= htmlspecialchars($firstName) ?></span></h1>
         <p>Ton stage, ton suivi, au même endroit.</p>
       </div>
       <a href="./nouveau-compte-rendu" class="button-primary"><i class="fa-solid fa-plus"></i>Créer un nouveau compte rendu</a>

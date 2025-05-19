@@ -48,7 +48,9 @@ class HomeController
         break;
       default:
         http_response_code(403);
-        echo "403 Forbidden";
+        renderView('error/403', [
+          'title' => 'JournaStage - Erreur'
+        ]);
         break;
     }
   }

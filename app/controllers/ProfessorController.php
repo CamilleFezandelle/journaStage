@@ -63,7 +63,9 @@ class ProfessorController
 
     if (!isset($_GET['id']) || empty($_GET['id'])) {
       http_response_code(404);
-      echo "Erreur 404 : Classe introuvable.";
+      renderView('error/404', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -71,7 +73,9 @@ class ProfessorController
 
     if (!$class) {
       http_response_code(404);
-      echo "Erreur 404 : Classe introuvable.";
+      renderView('error/404', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -79,7 +83,9 @@ class ProfessorController
 
     if (!$verifyTeacher) {
       http_response_code(403);
-      echo "Erreur 403 : Vous n'avez pas accès à cette classe.";
+      renderView('error/403', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -110,7 +116,9 @@ class ProfessorController
 
     if (!isset($_GET['id']) || empty($_GET['id'])) {
       http_response_code(404);
-      echo "Erreur 404 : Étudiant introuvable.";
+      renderView('error/404', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -118,7 +126,9 @@ class ProfessorController
 
     if (!$student) {
       http_response_code(404);
-      echo "Erreur 404 : Étudiant introuvable.";
+      renderView('error/404', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -126,7 +136,9 @@ class ProfessorController
 
     if (!$verifyTeacher) {
       http_response_code(403);
-      echo "Erreur 403 : Vous n'avez pas accès à cet étudiant.";
+      renderView('error/403', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       exit;
     }
 
@@ -150,7 +162,9 @@ class ProfessorController
 
       if (!$report) {
         http_response_code(404);
-        echo "Erreur 404 : Compte rendu introuvable.";
+        renderView('error/404', [
+          'title' => 'JournaStage - Erreur'
+        ]);
         exit;
       }
 

@@ -4,6 +4,7 @@ include_once __DIR__ . '/../repositories/UserRepository.php';
 include_once __DIR__ . '/../repositories/SessionRepository.php';
 include_once __DIR__ . '/../repositories/ReportRepository.php';
 include_once __DIR__ . '/../core/AuthService.php';
+include_once __DIR__ . '/../core/FormValidator.php';
 include_once __DIR__ . '/../core/FlashCookie.php';
 include_once __DIR__ . '/../models/Session.php';
 include_once __DIR__ . '/../views/renderView.php';
@@ -14,10 +15,8 @@ class StudentController
   private SessionRepository $sessionRepository;
   private ReportRepository $reportRepository;
   private AuthService $authService;
+  private FormValidator $formValidator;
   private FlashCookie $flashCookie;
-
-  const ERROR_INPUT_REQUIRED = 'Ce champ est requis.';
-  const ERROR_INPUT_INVALID = 'Le format de ce champ est invalide.';
 
   public function __construct()
   {
@@ -42,63 +41,59 @@ class StudentController
       exit;
     }
 
-
-    $error = [
-      'title' => '',
-      'date' => '',
-      'content' => ''
-    ];
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-      $title = $_POST['title'] ?? '';
-      $date = $_POST['date'] ?? '';
-      $content = $_POST['content'] ?? '';
+      $_POST = [
+        'title' => trim($_POST['title'] ?? ''),
+        'date' => trim($_POST['date'] ?? ''),
+        'content' => trim($_POST['content'] ?? '')
+      ];
 
-      if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
-        $error['date'] = self::ERROR_INPUT_INVALID;
-        return;
-      }
+      $validator = new FormValidator();
 
-      if (strlen($title) < 5 || strlen($title) > 120) {
-        $error['title'] = self::ERROR_INPUT_INVALID;
-        return;
-      }
+      $formRules = [
+        'title' => [
+          FormValidator::MIN => 5,
+          FormValidator::MAX => 120,
+          FormValidator::REQUIRED => true
+        ],
+        'date' => [
+          FormValidator::DATE => true,
+          FormValidator::REQUIRED => true
+        ],
+        'content' => [
+          FormValidator::MIN => 5,
+          FormValidator::MAX => 3000,
+          FormValidator::REQUIRED => true
+        ]
+      ];
 
-      if (strlen($content) < 5 || strlen($content) > 3000) {
-        $error['content'] = self::ERROR_INPUT_INVALID;
-        return;
-      }
+      $errors = $validator->validate($_POST, $formRules);
 
-      if (empty($title)) {
-        $error['title'] = self::ERROR_INPUT_REQUIRED;
-      }
+      if (empty($errors)) {
+        $title = $_POST['title'];
+        $date = $_POST['date'];
+        $content = $_POST['content'];
 
-      if (empty($date)) {
-        $error['date'] = self::ERROR_INPUT_REQUIRED;
-      }
-
-      if (empty($content)) {
-        $error['content'] = self::ERROR_INPUT_REQUIRED;
-      }
-
-      if ($this->reportRepository->createReport($title, $date, $content, $user->getIdUser())) {
-        $this->flashCookie->set('report_create', 'success');
-        header('Location: ./');
-        exit;
-      } else {
-        http_response_code(500);
-        renderView('error/500', [
-          'title' => 'JournaStage - Erreur'
-        ]);
-        exit;
+        if ($this->reportRepository->createReport($title, $date, $content, $user->getIdUser())) {
+          $this->flashCookie->set('report_create', 'success');
+          header('Location: ./');
+          exit;
+        } else {
+          http_response_code(500);
+          renderView('error/500', [
+            'title' => 'JournaStage - Erreur'
+          ]);
+          exit;
+        }
       }
     }
 
     renderView('student/newReport', [
-      'title' => 'JournaStage - Créer un compte-rendu',
+      'title' => 'JournaStage - Créer un nouveau compte rendu',
       'user' => $user,
-      'error' => $error,
+      'errors' => $errors ?? [],
+      'post' => $_POST ?? [],
       'scripts' => ['newReport.js'],
     ]);
   }
@@ -173,10 +168,18 @@ class StudentController
 
       // Delete a report
       if (isset($_GET['action']) && $_GET['action'] === 'delete') {
-        $this->reportRepository->deleteReport($report->getIdReport());
-        $this->flashCookie->set('report_delete', 'success');
-        header('Location: ./mes-comptes-rendus');
-        exit;
+
+        if ($this->reportRepository->deleteReport($report->getIdReport())) {
+          $this->flashCookie->set('report_delete', 'success');
+          header('Location: ./mes-comptes-rendus');
+          exit;
+        } else {
+          http_response_code(500);
+          renderView('error/500', [
+            'title' => 'JournaStage - Erreur'
+          ]);
+          exit;
+        }
       }
 
       // Edit a report
@@ -184,42 +187,49 @@ class StudentController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-          $title = $_POST['title'] ?? '';
-          $date = $_POST['date'] ?? '';
-          $content = $_POST['content'] ?? '';
+          $_POST = [
+            'title' => trim($_POST['title'] ?? ''),
+            'date' => trim($_POST['date'] ?? ''),
+            'content' => trim($_POST['content'] ?? '')
+          ];
 
-          if (strlen($title) < 5 || strlen($title) > 120) {
-            $error['title'] = self::ERROR_INPUT_INVALID;
-            return;
-          }
+          $validator = new FormValidator();
 
-          if (strlen($content) < 5 || strlen($content) > 3000) {
-            $error['content'] = self::ERROR_INPUT_INVALID;
-            return;
-          }
+          $formRules = [
+            'title' => [
+              FormValidator::MIN => 5,
+              FormValidator::MAX => 120,
+              FormValidator::REQUIRED => true
+            ],
+            'date' => [
+              FormValidator::DATE => true,
+              FormValidator::REQUIRED => true
+            ],
+            'content' => [
+              FormValidator::MIN => 5,
+              FormValidator::MAX => 3000,
+              FormValidator::REQUIRED => true
+            ]
+          ];
 
-          if (empty($title)) {
-            $error['title'] = self::ERROR_INPUT_REQUIRED;
-          }
+          $errors = $validator->validate($_POST, $formRules);
 
-          if (empty($date)) {
-            $error['date'] = self::ERROR_INPUT_REQUIRED;
-          }
+          if (empty($errors)) {
+            $title = $_POST['title'];
+            $date = $_POST['date'];
+            $content = $_POST['content'];
 
-          if (empty($content)) {
-            $error['content'] = self::ERROR_INPUT_REQUIRED;
-          }
-
-          if ($this->reportRepository->updateReport($report->getIdReport(), $title, $date, $content)) {
-            $this->flashCookie->set('report_update', 'success');
-            header('Location: ./mes-comptes-rendus?id=' . $report->getPublicId());
-            exit;
-          } else {
-            http_response_code(500);
-            renderView('error/500', [
-              'title' => 'JournaStage - Erreur'
-            ]);
-            exit;
+            if ($this->reportRepository->updateReport($report->getIdReport(), $title, $date, $content)) {
+              $this->flashCookie->set('report_update', 'success');
+              header('Location: ./mes-comptes-rendus?id=' . $report->getPublicId());
+              exit;
+            } else {
+              http_response_code(500);
+              renderView('error/500', [
+                'title' => 'JournaStage - Erreur'
+              ]);
+              exit;
+            }
           }
         }
 
@@ -227,13 +237,15 @@ class StudentController
           'title' => 'JournaStage - Éditer mon compte rendu',
           'user' => $user,
           'report' => $report,
+          'errors' => $errors ?? [],
+          'post' => $_POST ?? [],
           'scripts' => ['editReport.js']
         ]);
         exit;
       }
 
       renderView('student/viewReport', [
-        'title' => 'JournaStage - Mon compte rendu',
+        'title' => 'JournaStage - Mes comptes rendus',
         'user' => $user,
         'report' => $report,
         'successUpdate' => $successUpdate,
@@ -257,7 +269,7 @@ class StudentController
     $reports = $reportsByYear;
 
     renderView('student/myReports', [
-      'title' => 'JournaStage - Mes comptes-rendus',
+      'title' => 'JournaStage - Mes comptes rendus',
       'user' => $user,
       'reports' => $reports,
       'successDelete' => $successDelete,

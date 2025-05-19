@@ -1,7 +1,7 @@
 <?php
-$reportTitle = htmlspecialchars($report->getTitle());
-$reportDate = htmlspecialchars($report->getDate());
-$reportContent = htmlspecialchars($report->getContent());
+$reportTitle = $report->getTitle();
+$reportDate = $report->getDate();
+$reportContent = $report->getContent();
 
 ?>
 
@@ -58,15 +58,15 @@ $reportContent = htmlspecialchars($report->getContent());
       <form action="#" method="POST" class="border-top">
         <div class="input-container">
           <label for="title">Titre du compte rendu</label>
-          <input type="text" id="title" name="title" value="<?= $reportTitle ?>" disabled />
+          <input type="text" id="title" name="title" value="<?= htmlspecialchars($reportTitle) ?>" disabled />
         </div>
         <div class="input-container">
           <label for="date">Date</label>
-          <input type="date" id="date" name="date" value="<?= $reportDate ?>" disabled />
+          <input type="date" id="date" name="date" value="<?= htmlspecialchars($reportDate) ?>" disabled />
         </div>
         <div class="input-container">
           <label for="content">Contenu</label>
-          <textarea id="content" name="content" rows="4" class="large" disabled><?= html_entity_decode($reportContent) ?></textarea>
+          <textarea id="content" name="content" rows="4" class="large" disabled><?= htmlspecialchars($reportContent) ?></textarea>
         </div>
       </form>
     </div>

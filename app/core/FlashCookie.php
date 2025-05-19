@@ -6,7 +6,7 @@ class FlashCookie
   {
     setcookie($name, $value, [
       'expires' => time() + $duration,
-      'path' => './',
+      'path' => '/',
       'domain' => '',
       'secure' => false,
       // 'secure' => true, // HTTPS
@@ -21,7 +21,7 @@ class FlashCookie
       $value = $_COOKIE[$name];
       setcookie($name, '', [
         'expires' => time() - 3600,
-        'path' => './',
+        'path' => '/',
         'domain' => '',
         'secure' => false,
         // 'secure' => true, // HTTPS

@@ -4,6 +4,7 @@ include_once __DIR__ . '/../repositories/UserRepository.php';
 include_once __DIR__ . '/../repositories/SessionRepository.php';
 include_once __DIR__ . '/../repositories/ClassRepository.php';
 include_once __DIR__ . '/../core/AuthService.php';
+include_once __DIR__ . '/../core/FormValidator.php';
 include_once __DIR__ . '/../core/FlashCookie.php';
 include_once __DIR__ . '/../views/renderView.php';
 
@@ -13,6 +14,7 @@ class ProfileController
   private SessionRepository $sessionRepository;
   private ClassRepository $classRepository;
   private AuthService $authService;
+  private FormValidator $formValidator;
   private FlashCookie $flashCookie;
 
   public function __construct()
@@ -38,6 +40,27 @@ class ProfileController
       exit;
     }
 
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
+
+    $scripts = ['personalInfo.js'];
+    $cookiePwdContent = '';
+    $cookieClassContent = '';
+
+    $cookiePwd = $this->flashCookie->getAndDelete('change-pwd');
+    $cookieClass = $this->flashCookie->getAndDelete('change-class');
+
+    if ($cookiePwd === 'success') {
+      $cookiePwdContent = 'success';
+      array_push($scripts, 'temp-window.js');
+    }
+
+    if ($cookieClass === 'success') {
+      $cookieClassContent = 'success';
+      array_push($scripts, 'temp-window.js');
+    }
+
     $classes = [];
 
     if ($user->getStatus() === 0) {
@@ -49,11 +72,13 @@ class ProfileController
     }
 
     renderView('personalInfo', [
-      'title' => 'JournaStage - Informations personnelles',
+      'title' => 'JournaStage - Éditer mon compte',
       'user' => $user,
       'classes' => $classes,
       'linkactive' => true,
-      'scripts' => ['personalInfo.js'],
+      'cookiePwdContent' => $cookiePwdContent,
+      'cookieClassContent' => $cookieClassContent,
+      'scripts' => $scripts,
     ]);
   }
 
@@ -71,41 +96,85 @@ class ProfileController
       exit;
     }
 
-    // $userPassword = $user->getPassword();
+    header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+    header("Cache-Control: post-check=0, pre-check=0", false);
+    header("Pragma: no-cache");
+
+    $scripts = ['changePwd.js'];
+    $cookieContent = '';
+
+    $cookie = $this->flashCookie->getAndDelete('change-pwd');
+
+    if ($cookie === 'wrong-pwd') {
+      $cookieContent = 'wrong-pwd';
+      array_push($scripts, 'temp-window.js');
+    }
+
+    if ($cookie === 'same-pwd') {
+      $cookieContent = 'same-pwd';
+      array_push($scripts, 'temp-window.js');
+    }
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $userPassword = $user->getPassword();
 
-      $currentPassword = trim($_POST['current_password'] ?? '');
-      $newPassword = trim($_POST['new_password'] ?? '');
-      $confirmPassword = trim($_POST['confirm_password'] ?? '');
+      $_POST = [
+        'current_password' => trim($_POST['current_password'] ?? ''),
+        'new_password' => trim($_POST['new_password'] ?? ''),
+        'confirm_password' => trim($_POST['confirm_password'] ?? '')
+      ];
 
-      if (!password_verify($currentPassword, $userPassword)) {
-        echo 'Mot de passe actuel incorrect.';
-        exit;
-      }
+      $validator = new FormValidator();
+      $errors = [];
 
-      if (password_verify($newPassword, $userPassword)) {
-        echo 'Le nouveau mot de passe ne peut pas être le même que l\'ancien.';
-        exit;
-      }
+      $formRules = [
+        'current_password' => [
+          FormValidator::MIN => 3,
+          FormValidator::MAX => 255,
+          FormValidator::REQUIRED => true
+        ],
+        'new_password' => [
+          FormValidator::MIN => 8,
+          FormValidator::MAX => 255,
+          FormValidator::REQUIRED => true
+        ],
+        'confirm_password' => [
+          FormValidator::CONFIRM_PASSWORD => 'new_password',
+          FormValidator::REQUIRED => true
+        ]
+      ];
 
-      if ($newPassword !== $confirmPassword) {
-        echo 'Les mots de passe ne correspondent pas.';
-        exit;
-      }
+      $errors = $validator->validate($_POST, $formRules);
 
-      $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+      if (empty($errors)) {
 
-      $changePwd = $this->userRepository->changeUserPassword($user->getIdUser(), $hashedPassword);
+        if (!password_verify($_POST['current_password'], $userPassword)) {
+          $this->flashCookie->set('change-pwd', 'wrong-pwd');
+          header('Location: ./modifier-mot-de-passe');
+          exit;
+        }
 
-      if ($changePwd) {
-        header('Location: ../informations-personnelles');
-        exit;
-      } else {
-        http_response_code(500);
-        echo 'Erreur 500 : Impossible de changer le mot de passe.';
-        exit;
+        if ($_POST['new_password'] === $_POST['current_password']) {
+          $this->flashCookie->set('change-pwd', 'same-pwd');
+          header('Location: ./modifier-mot-de-passe');
+          exit;
+        }
+
+        $hashedPassword = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+
+        $changePwd = $this->userRepository->changeUserPassword($user->getIdUser(), $hashedPassword);
+
+        if ($changePwd) {
+          $this->flashCookie->set('change-pwd', 'success');
+          header('Location: ../informations-personnelles');
+          exit;
+        } else {
+          http_response_code(500);
+          renderView('error/500', [
+            'title' => 'JournaStage - Erreur'
+          ]);
+          exit;
+        }
       }
     }
 
@@ -113,7 +182,9 @@ class ProfileController
       'title' => 'JournaStage - Informations personnelles',
       'user' => $user,
       'linkactive' => true,
-      'scripts' => ['changePwd.js'],
+      'errors' => $errors ?? [],
+      'cookieContent' => $cookieContent,
+      'scripts' => $scripts,
     ]);
   }
 
@@ -145,10 +216,13 @@ class ProfileController
 
       if (!$remove || !$add) {
         http_response_code(500);
-        echo 'Erreur lors de la mise à jour des classes.';
+        renderView('error/500', [
+          'title' => 'JournaStage - Erreur'
+        ]);
         exit;
       }
 
+      $this->flashCookie->set('change-class', 'success');
       header('Location: ../informations-personnelles');
       exit;
     }

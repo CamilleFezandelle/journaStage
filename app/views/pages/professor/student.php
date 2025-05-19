@@ -1,12 +1,12 @@
 <?php
 
-$studentPublicId = htmlspecialchars($student['student_public_id']);
-$studentLastName = htmlspecialchars($student['student_last_name']);
-$studentFirstName = htmlspecialchars($student['student_first_name']);
-$studentBirthDate = new DateTime(htmlspecialchars($student['student_birth_date']));
+$studentPublicId = $student['student_public_id'];
+$studentLastName = $student['student_last_name'];
+$studentFirstName = $student['student_first_name'];
+$studentBirthDate = new DateTime($student['student_birth_date']);
 $today = new DateTime();
 $studentAge = $today->diff($studentBirthDate)->y;
-$reportCount = htmlspecialchars($student['report_count']);
+$reportCount = $student['report_count'];
 
 if ($studentAge < 0) {
   $studentAge = 0;
@@ -23,10 +23,10 @@ if ($reportCount < 2) {
 <div class="title-container">
   <section>
     <div class="title">
-      <h1><span class="uppercase"><?= $studentLastName ?></span> <?= $studentFirstName ?></h1>
-      <p><?= $studentAge ?> ans</p>
+      <h1><span class="uppercase"><?= htmlspecialchars($studentLastName) ?></span> <?= htmlspecialchars($studentFirstName) ?></h1>
+      <p><?= htmlspecialchars($studentAge) ?> ans</p>
     </div>
-    <P class="description"><?= $reportCount ?></P>
+    <P class="description"><?= htmlspecialchars($reportCount) ?></P>
   </section>
 </div>
 <div class="main-container">
@@ -97,11 +97,11 @@ if ($reportCount < 2) {
       <?php foreach ($reports as $year => $reportsList): ?>
         <div class="year-container">
           <div class="year-separator">
-            <span><?= $year ?></span>
+            <span><?= htmlspecialchars($year) ?></span>
           </div>
           <?php foreach ($reportsList as $report): ?>
             <fieldset class="element">
-              <legend>Compte rendu du <?= (new DateTime($report->getDate()))->format('d-m-Y') ?> </legend>
+              <legend>Compte rendu du <?= (new DateTime(htmlspecialchars($report->getDate())))->format('d-m-Y') ?></legend>
               <div class="content">
                 <div class="text-overflow text-with-dots">
                   <p class="text-overflow"><?= htmlspecialchars($report->getTitle()) ?></p>

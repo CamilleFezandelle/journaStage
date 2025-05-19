@@ -3,10 +3,10 @@
 $userStatus = $user->getStatus();
 $isAdmin = $user->isAdmin();
 
-$lastName = htmlspecialchars($user->getLastName());
-$firstName = htmlspecialchars($user->getFirstName());
-$email = htmlspecialchars($user->getEmail());
-$birthDate = htmlspecialchars($user->getBirthDate());
+$lastName = $user->getLastName();
+$firstName = $user->getFirstName();
+$email = $user->getEmail();
+$birthDate = $user->getBirthDate();
 $statusName = '';
 
 if ($userStatus === 0) {
@@ -22,6 +22,23 @@ if ($isAdmin) {
 }
 
 ?>
+
+<?php if ($cookiePwdContent === 'success') : ?>
+  <div class="temp-window success">
+    <p><i class="fa-solid fa-circle-check"></i>Votre mot de passe a été changé avec succès !</p>
+  </div>
+<?php endif ?>
+
+<?php if ($cookieClassContent === 'success') : ?>
+  <div class="temp-window success">
+    <?php if ($userStatus === 0) : ?>
+      <p><i class="fa-solid fa-circle-check"></i>Votre classe a été changée avec succès !</p>
+    <?php endif ?>
+    <?php if ($userStatus === 1) : ?>
+      <p><i class="fa-solid fa-circle-check"></i>Vos classes ont été changées avec succès !</p>
+    <?php endif ?>
+  </div>
+<?php endif ?>
 
 <div class="title-container">
   <section>
@@ -59,23 +76,23 @@ if ($isAdmin) {
           <form class="grid-form">
             <div class="input-container">
               <label for="name">Nom</label>
-              <input type="text" id="name" name="name" value="<?= $lastName ?>" disabled />
+              <input type="text" id="name" name="name" value="<?= htmlspecialchars($lastName) ?>" disabled />
             </div>
             <div class="input-container">
               <label for="first-name">Prénom</label>
-              <input type="text" id="first-name" name="first-name" value="<?= $firstName ?>" disabled />
+              <input type="text" id="first-name" name="first-name" value="<?= htmlspecialchars($firstName) ?>" disabled />
             </div>
             <div class="input-container">
               <label for="email">Email</label>
-              <input type="email" id="email" name="email" value="<?= $email ?>" disabled />
+              <input type="email" id="email" name="email" value="<?= htmlspecialchars($email) ?>" disabled />
             </div>
             <div class="input-container">
               <label for="birth-date">Date de naissance</label>
-              <input type="date" id="birth-date" name="birth-date" value="<?= $birthDate ?>" disabled />
+              <input type="date" id="birth-date" name="birth-date" value="<?= htmlspecialchars($birthDate) ?>" disabled />
             </div>
             <div class="input-container">
               <label for="status">Statut</label>
-              <input type="text" id="status" name="status" value="<?= $statusName ?>" disabled />
+              <input type="text" id="status" name="status" value="<?= htmlspecialchars($statusName) ?>" disabled />
             </div>
           </form>
         </div>
@@ -91,7 +108,7 @@ if ($isAdmin) {
               <input type="password" id="password" name="password" value="password" disabled />
             </div>
             <div class="btn-container-grid">
-              <a href="./informations-personnelles/modifier-mot-de-passe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Modifiez votre mot de passe</a>
+              <a href="./informations-personnelles/modifier-mot-de-passe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Changer le mot de passe</a>
             </div>
           </form>
         </div>
@@ -106,7 +123,7 @@ if ($isAdmin) {
               <?php foreach ($classes as $index => $class) : ?>
                 <div class="input-container">
                   <label for="school">Établissement</label>
-                  <input type="text" id="school" name="school" value="<?= htmlspecialchars($class->school->schoolName) ?>" disabled />
+                  <input type="text" id="school" name="school" value="<?= htmlspecialchars($class->school->schoolName) . ' (' . htmlspecialchars($class->school->schoolDepartmentNumber) . ')' ?>" disabled />
                 </div>
                 <div class="input-container">
                   <label for="class">Classe</label>
@@ -115,7 +132,7 @@ if ($isAdmin) {
               <?php endforeach ?>
             </form>
             <div class="btn-container-grid">
-              <a href="./informations-personnelles/modifier-classe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Changez votre classe</a>
+              <a href="./informations-personnelles/modifier-classe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Changer de classe</a>
             </div>
           </div>
         </div>
@@ -131,7 +148,7 @@ if ($isAdmin) {
                 <p><?= $index + 1 ?>.</p>
                 <div class="input-container">
                   <label for="school">Établissement</label>
-                  <input type="text" id="school" name="school" value="<?= htmlspecialchars($class->school->schoolName) ?>" disabled />
+                  <input type="text" id="school" name="school" value="<?= htmlspecialchars($class->school->schoolName) . ' (' . htmlspecialchars($class->school->schoolDepartmentNumber) . ')' ?>" disabled />
                 </div>
                 <div class="input-container">
                   <label for="class">Classe</label>
@@ -140,7 +157,7 @@ if ($isAdmin) {
               <?php endforeach ?>
             </form>
             <div class="btn-container-grid">
-              <a href="./informations-personnelles/modifier-classe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Changez vos classes</a>
+              <a href="./informations-personnelles/modifier-classe" class="button-primary"><i class="fa-solid fa-pen-to-square"></i>Changer les classes</a>
             </div>
           </div>
         </div>

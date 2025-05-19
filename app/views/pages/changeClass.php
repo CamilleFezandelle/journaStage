@@ -5,11 +5,15 @@ $userStatus = $user->getStatus();
 <div class="main-container">
   <main class="main-center">
     <div class="container login center">
-      <h2 class="text-center">Changez vos classes</h2>
+      <?php if ($userStatus === 0) : ?>
+        <h2 class="text-center">Changez votre classe</h2>
+      <?php elseif ($userStatus === 1) : ?>
+        <h2 class="text-center">Changez vos classes</h2>
+      <?php endif; ?>
       <form action="./modifier-classe" method="POST">
         <?php if ($userStatus === 0) : ?>
-          <fieldset class="teacher-choice">
-            <legend>Choisissez vos classes</legend>
+          <fieldset class="student-choice">
+            <legend>Choisissez votre classe</legend>
             <?php foreach ($classList as $class): ?>
               <?php
               $classId = $class['class_id'];

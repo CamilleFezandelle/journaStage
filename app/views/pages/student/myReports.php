@@ -73,11 +73,11 @@
       <?php foreach ($reports as $year => $reportsList): ?>
         <div class="year-container">
           <div class="year-separator">
-            <span><?= $year ?></span>
+            <span><?= htmlspecialchars($year) ?></span>
           </div>
           <?php foreach ($reportsList as $report): ?>
             <fieldset class="element">
-              <legend>Compte rendu du <?= (new DateTime($report->getDate()))->format('d-m-Y') ?> </legend>
+              <legend>Compte rendu du <?= (new DateTime(htmlspecialchars($report->getDate())))->format('d-m-Y') ?> </legend>
               <div class="content">
                 <div class="text-overflow text-with-dots">
                   <p class="text-overflow"><?= htmlspecialchars($report->getTitle()) ?></p>

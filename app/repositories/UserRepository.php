@@ -99,4 +99,23 @@ class UserRepository
       return false;
     }
   }
+
+  public function resetUserPassword(int $idUser, string $password): bool
+  {
+    $query = "UPDATE JOURNASTAGE_USER
+              SET password = :password,
+              temporary_password = 1
+              WHERE id_user = :id_user";
+
+    try {
+      $stmt = $this->db->prepare($query);
+
+      $stmt->bindParam(':password', $password);
+      $stmt->bindParam(':id_user', $idUser);
+
+      return $stmt->execute();
+    } catch (PDOException) {
+      return false;
+    }
+  }
 }

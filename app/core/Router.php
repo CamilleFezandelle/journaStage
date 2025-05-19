@@ -39,7 +39,9 @@ class Router
 
       if (isset($route['access']) && is_callable($route['access']) && !$route['access']()) {
         http_response_code(403);
-        echo "403 Forbidden";
+        renderView('error/403', [
+          'title' => 'JournaStage - Erreur'
+        ]);
         return;
       }
 
@@ -51,7 +53,9 @@ class Router
       }
     } else {
       http_response_code(404);
-      echo "404 Not Found";
+      renderView('error/404', [
+        'title' => 'JournaStage - Erreur'
+      ]);
       return;
     }
   }

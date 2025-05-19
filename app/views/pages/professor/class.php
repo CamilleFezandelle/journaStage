@@ -1,8 +1,8 @@
 <?php
-$className = htmlspecialchars($class->className);
+$className = $class->className;
 $classYear = $class->classFullYear;
-$classLocation = htmlspecialchars($class->school->schoolFullLocation);
-$classStudentCount = htmlspecialchars($class->classStudentCount);
+$classLocation = $class->school->schoolFullLocation;
+$classStudentCount = $class->classStudentCount;
 
 if ($classStudentCount < 2) {
   $classStudentCount .= " étudiant";
@@ -10,19 +10,15 @@ if ($classStudentCount < 2) {
   $classStudentCount .= " étudiants";
 }
 
-if ($classYear !== '<span class="invisible">a</span>') {
-  $className .= ' - ' . $classYear;
-}
-
 ?>
 
 <div class="title-container">
   <section>
     <div class="title">
-      <h1><?= $className ?></h1>
-      <p><?= $classLocation ?></p>
+      <h1><?= htmlspecialchars($className) . ($classYear !== '<span class="invisible">a</span>' ? ' - ' . $classYear : '') ?></h1>
+      <p><?= htmlspecialchars($classLocation) ?></p>
     </div>
-    <p class="description"><?= $classStudentCount ?></p>
+    <p class="description"><?= htmlspecialchars($classStudentCount) ?></p>
   </section>
 </div>
 <div class="main-container">
@@ -73,7 +69,7 @@ if ($classYear !== '<span class="invisible">a</span>') {
                 <i class="fa-solid fa-user-graduate"></i>
                 <span><span class="uppercase"><?= htmlspecialchars($student['student_last_name']) ?></span> <?= htmlspecialchars($student['student_first_name']) ?></span>
               </p>
-              <a href="./etudiant?id=<?= htmlspecialchars($student['student_public_id']) ?>" class="button-primary"><i class="fa-solid fa-eye"></i>Voir l'étudiant</a>
+              <a href="./etudiant?id=<?= $student['student_public_id'] ?>" class="button-primary"><i class="fa-solid fa-eye"></i>Voir l'étudiant</a>
             </div>
           </fieldset>
         <?php endforeach; ?>
