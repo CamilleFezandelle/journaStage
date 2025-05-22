@@ -1,4 +1,4 @@
-# 📘 Journastage
+# 📘 JournaStage
 
 Plateforme web intuitive pour la gestion des comptes-rendus de stage des apprentis, à destination des étudiants et des professeurs.
 
