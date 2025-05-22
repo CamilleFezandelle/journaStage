@@ -14,8 +14,8 @@ if ($classStudentCount < 2) {
 
 <div class="title-container">
   <section>
-    <div class="title">
-      <h1><?= htmlspecialchars($className) . ($classYear !== '<span class="invisible">a</span>' ? ' - ' . $classYear : '') ?></h1>
+    <div class="title text-overflow">
+      <h1 class="text-overflow"><?= htmlspecialchars($className) . ($classYear !== '<span class="invisible">a</span>' ? ' - ' . $classYear : '') ?></h1>
       <p><?= htmlspecialchars($classLocation) ?></p>
     </div>
     <p class="description"><?= htmlspecialchars($classStudentCount) ?></p>

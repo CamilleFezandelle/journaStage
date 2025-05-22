@@ -4,11 +4,18 @@ class AuthService
 {
   private UserRepository $userRepository;
   private SessionRepository $sessionRepository;
+  private bool $secure;
 
   public function __construct(UserRepository $userRepository, SessionRepository $sessionRepository)
   {
     $this->userRepository = $userRepository;
     $this->sessionRepository = $sessionRepository;
+
+    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' && $_SERVER['SERVER_PORT'] == 443) {
+      $this->secure = true;
+    } else {
+      $this->secure = false;
+    }
   }
 
   public function login(string $email, string $password): ?User
@@ -28,8 +35,7 @@ class AuthService
           'expires' => $sessionExpiresAt,
           'path' => './',
           'domain' => '',
-          'secure' => false,
-          // 'secure' => true, // HTTPS
+          'secure' => $this->secure,
           'httponly' => true,
           'samesite' => 'Strict'
         ]
@@ -62,6 +68,7 @@ class AuthService
   public function logout(): void
   {
     if (isset($_COOKIE['session_token'])) {
+
       $this->sessionRepository->deleteSession($_COOKIE['session_token']);
 
       setcookie(
@@ -71,8 +78,7 @@ class AuthService
           'expires' => time() - 3600,
           'path' => './',
           'domain' => '',
-          'secure' => false,
-          // 'secure' => true, // HTTPS
+          'secure' => $this->secure,
           'httponly' => true,
           'samesite' => 'Strict'
         ]

@@ -788,6 +788,7 @@ textarea.large {
 
     p {
       margin-top: 0.25rem;
+      text-align: center;
       font-size: 0.9rem;
       color: var(--input-placeholder);
     }
