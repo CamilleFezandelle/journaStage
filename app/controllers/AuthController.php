@@ -254,10 +254,6 @@ class AuthController
 
         $subject = 'JournaStage - Demande de compte de ' . $firstName . ' ' . $lastName;
 
-        $headers = 'From: ' . $email . "\r\n" .
-          'Reply-To: ' . $email . "\r\n" .
-          'X-Mailer: PHP/' . phpversion();
-
         $body = "Nom: $lastName\n" .
           "Prénom: $firstName\n" .
           "Email: $email\n" .
@@ -271,7 +267,7 @@ class AuthController
           $body .= "$schoolFullName - $classFullName\n";
         }
 
-        $success = mail($to, $subject, $body, $headers);
+        $success = mail($to, $subject, $body);
 
         if (!$success) {
           http_response_code(500);
@@ -383,16 +379,12 @@ class AuthController
 
         $subject = 'JournaStage - Message de ' . $firstName . ' ' . $lastName;
 
-        $headers = 'From: ' . $email . "\r\n" .
-          'Reply-To: ' . $email . "\r\n" .
-          'X-Mailer: PHP/' . phpversion();
-
         $body = "Nom: $lastName\n" .
           "Prénom: $firstName\n" .
           "Email: $email\n\n" .
           "Message:\n$message";
 
-        $success = mail($to, $subject, $body, $headers);
+        $success = mail($to, $subject, $body);
 
         if (!$success) {
           http_response_code(500);

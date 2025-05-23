@@ -33,8 +33,7 @@ class AuthService
         $sessionToken,
         [
           'expires' => $sessionExpiresAt,
-          'path' => './',
-          'domain' => '',
+          'path' => '/',
           'secure' => $this->secure,
           'httponly' => true,
           'samesite' => 'Strict'
@@ -76,8 +75,7 @@ class AuthService
         '',
         [
           'expires' => time() - 3600,
-          'path' => './',
-          'domain' => '',
+          'path' => '/',
           'secure' => $this->secure,
           'httponly' => true,
           'samesite' => 'Strict'

@@ -18,7 +18,6 @@ class FlashCookie
     setcookie($name, $value, [
       'expires' => time() + $duration,
       'path' => '/',
-      'domain' => '',
       'secure' => $this->secure,
       'httponly' => true,
       'samesite' => 'Strict'
@@ -32,7 +31,6 @@ class FlashCookie
       setcookie($name, '', [
         'expires' => time() - 3600,
         'path' => '/',
-        'domain' => '',
         'secure' => $this->secure,
         'httponly' => true,
         'samesite' => 'Strict'
